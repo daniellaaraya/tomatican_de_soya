@@ -24,7 +24,7 @@ public class API : MonoBehaviour {
 		form.AddField("name", nameField.text);
 		form.AddField("password", passwordField.text);
 
-		WWW www = new WWW("http://daniellaaraya.cl/Tomatica_de_soya/connection.php", form);
+		WWW www = new WWW("https://daniellaaraya.cl/tomatican/connection.php", form);
 		yield return www;
 		if(www.text == "0")
 		{
