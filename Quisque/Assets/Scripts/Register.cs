@@ -9,9 +9,9 @@ public class Register : MonoBehaviour {
 
 	public InputField nameField;
 	public InputField passwordField;
-
 	public Button submitButton;
-
+	public GameObject panelMessage;
+	public Text messageTest;
 
 	public void callRegister()
 	{
@@ -20,19 +20,24 @@ public class Register : MonoBehaviour {
 
 	IEnumerator RegisterUser()
 	{
-		WWWForm form = new WWWForm();
-		form.AddField("name", nameField.text);
-		form.AddField("password", passwordField.text);
-
-		WWW www = new WWW("https://daniellaaraya.cl/tomatican/connection.php", form);
-		yield return www;
-		if(www.text == "0")
+		if(ValidatePassword(passwordField.text) == true)
 		{
-			Debug.Log("User Created Succesfully");
-			SceneManager.LoadScene("Play");
-		}else
-		{
-			Debug.Log("User Creation failed" + www.text);
+			WWWForm form = new WWWForm();
+			form.AddField("name", nameField.text);
+			form.AddField("password", passwordField.text);
+			
+			WWW www = new WWW("https://daniellaaraya.cl/tomatican/connection.php", form);
+			yield return www;
+			if(www.text == "0")
+			{
+				Debug.Log("User Created Succesfully");
+				SceneManager.LoadScene("Play");
+			}else
+			{
+				Debug.Log("User Creation failed" + www.text);
+				ShowMessage(www.text);
+			
+			}
 		}
 
 	}
@@ -40,8 +45,29 @@ public class Register : MonoBehaviour {
 	{
 		submitButton.interactable = (nameField.text.Length >= 8 && passwordField.text.Length >= 8);
 
+
+	}
+	public void ShowMessage(string conMessage)
+	{
+		panelMessage.SetActive(true);
+		messageTest.text = conMessage;
 	}
 
+	public bool ValidatePassword(string pass)
+	{
+		if(pass.Length < 5)
+		{
+			ShowMessage("La contraseña debe tener al menos 5 caracteres");
+			return false;
+		}
+		if(pass.Contains(" "))
+		{
+			ShowMessage("La contraseña no puede contener espacios");
+			return false;
+		}
+			
 
+		return true;
+	}
 
 }
